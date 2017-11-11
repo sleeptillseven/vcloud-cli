@@ -1,23 +1,24 @@
 package main
 
 import (
-    "fmt"
-    "os"
-	"net/http"
-	"io/ioutil"
-	"flag"
 	"encoding/xml"
-	"github.com/juju/errors"
+	"flag"
+	"fmt"
 	"github.com/floriankammermann/vcloud-cli/types"
+	"github.com/juju/errors"
+	"io/ioutil"
+	"net/http"
+	"os"
 )
 
 var vcdClient *VcdClientType
+
 const vcdUserEnvVarName string = "VCD_USER"
 const vcdPasswordEnvVarName string = "VCD_PASSWORD"
 const vcdOrgEnvVarName string = "VCD_ORG"
 
 type VcdClientType struct {
-	VAToken       string  // vCloud Air authorization token
+	VAToken string // vCloud Air authorization token
 }
 
 func main() {
@@ -38,28 +39,28 @@ func main() {
 func getAuthToken() {
 	user := os.Getenv(vcdUserEnvVarName)
 	if len(user) == 0 {
-		fmt.Printf("the environment variable [%s] is not set\n",vcdUserEnvVarName)
+		fmt.Printf("the environment variable [%s] is not set\n", vcdUserEnvVarName)
 		os.Exit(-1)
 	}
 	fmt.Printf("%s: [%s]\n", vcdUserEnvVarName, user)
 
 	password := os.Getenv(vcdPasswordEnvVarName)
 	if len(password) == 0 {
-		fmt.Printf("the environment variable [%s] is not set\n",vcdPasswordEnvVarName)
+		fmt.Printf("the environment variable [%s] is not set\n", vcdPasswordEnvVarName)
 		os.Exit(-1)
 	}
 	fmt.Printf("%s: [%s]\n", vcdPasswordEnvVarName, "***************")
 
 	org := os.Getenv(vcdOrgEnvVarName)
 	if len(org) == 0 {
-		fmt.Printf("the environment variable [%s] is not set\n",vcdOrgEnvVarName)
+		fmt.Printf("the environment variable [%s] is not set\n", vcdOrgEnvVarName)
 		os.Exit(-1)
 	}
 	fmt.Printf("%s: [%s]\n", vcdOrgEnvVarName, org)
 
 	req, err := http.NewRequest("POST", "https://datacenter.swisscomcloud.com/api/sessions", nil)
 	req.Header.Set("Accept", "application/*+xml;version=5.5")
-	req.SetBasicAuth(user + "@" + org, password)
+	req.SetBasicAuth(user+"@"+org, password)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -94,7 +95,6 @@ func getAllVm() {
 	for _, vm := range queryRes.VMRecord {
 		fmt.Printf("VM Name [%s]\n", vm.Name)
 	}
-
 
 }
 
