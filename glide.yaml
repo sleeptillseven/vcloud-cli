@@ -1,3 +1,2 @@
 package: github.com/floriankammermann/vcloud-cli
 import:
-  - package: github.com/ukcloud/govcloudair/types/v56

@@ -1,7 +1,3 @@
-/*
- * Copyright 2014 VMware, Inc.  All rights reserved.  Licensed under the Apache v2 License.
- */
-
 package types
 
 import (
@@ -1640,6 +1636,7 @@ type QueryResultRecordsType struct {
 	EdgeGatewayRecord          *QueryResultEdgeGatewayRecordType            `xml:"EdgeGatewayRecord"`          // A record representing a query result.
 	VMRecord                   []*QueryResultVMRecordType                   `xml:"VMRecord"`                   // A record representing a VM result.
 	VAppRecord                 []*QueryResultVAppRecordType                 `xml:"VAppRecord"`                 // A record representing a VApp result.
+	OrgNetworkRecord		   []*QueryResultOrgNetworkRecordType 			`xml:"OrgNetworkRecord"`		   // A record representing a OrgNetwork result.
 	OrgVdcStorageProfileRecord []*QueryResultOrgVdcStorageProfileRecordType `xml:"OrgVdcStorageProfileRecord"` // A record representing storage profiles
 }
 
@@ -1685,6 +1682,12 @@ type QueryResultVMRecordType struct {
 	TaskStatusName          string `xml:"taskStatusName,attr,omitempty"`
 	TaskDetails             string `xml:"taskDetails,attr,omitempty"`
 	TaskStatus              string `xml:"TaskStatus,attr,omitempty"`
+}
+
+type QueryResultOrgNetworkRecordType struct {
+	// Attributes
+	HREF                    string `xml:"href,attr,omitempty"`       // The URI of the entity.
+	Name                    string `xml:"name,attr,omitempty"`       // OrgNetwork name.
 }
 
 // QueryResultVAppRecordType represents a VM record as query result.

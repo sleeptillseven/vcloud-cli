@@ -7,7 +7,8 @@ import (
 	"io/ioutil"
 	"flag"
 	"encoding/xml"
-	"github.com/ukcloud/govcloudair/types/v56"
+	"github.com/juju/errors"
+	"github.com/floriankammermann/vcloud-cli/types"
 )
 
 var vcdClient *VcdClientType
@@ -21,11 +22,15 @@ type VcdClientType struct {
 
 func main() {
 	queryType := flag.String("query", "", "query type.")
+	networkname := flag.String("networkname", "", "networkname")
 	flag.Parse()
 	fmt.Printf("query type: [%s]\n", *queryType)
 	getAuthToken()
 	if "vm" == *queryType {
 		getAllVm()
+	}
+	if "allocatedip" == *queryType {
+		getAllocatedIpForNetwork(*networkname)
 	}
 
 }
@@ -67,7 +72,7 @@ func getAuthToken() {
 	vcdClient = &VcdClientType{
 		VAToken: auth,
 	}
-	fmt.Printf("authorization: [%s]", vcdClient.VAToken)
+	fmt.Printf("authorization: [%s]\n", "*****************")
 }
 
 func getAllVm() {
@@ -91,6 +96,33 @@ func getAllVm() {
 	}
 
 
+}
+
+func getAllocatedIpForNetwork(networkname string) error {
+
+	if len(networkname) == 0 {
+		return errors.New("networkname is empty")
+	}
+	req, err := http.NewRequest("GET", "https://datacenter.swisscomcloud.com/api/query?type=orgNetwork&fields=name&filter=name=="+networkname, nil)
+	req.Header.Set("x-vcloud-authorization", vcdClient.VAToken)
+	req.Header.Set("Accept", "application/*+xml;version=1.5")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	queryRes := new(types.QueryResultRecordsType)
+	decodeBody(resp, queryRes)
+
+	for _, net := range queryRes.OrgNetworkRecord {
+		fmt.Printf("Org Network Name [%s]\n", net.Name)
+	}
+
+	return nil
 }
 
 // decodeBody is used to XML decode a response body
