@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"io/ioutil"
 	"flag"
+	"encoding/xml"
+	"github.com/ukcloud/govcloudair/types/v56"
 )
 
 var vcdClient *VcdClientType
@@ -22,6 +24,10 @@ func main() {
 	flag.Parse()
 	fmt.Printf("query type: [%s]\n", *queryType)
 	getAuthToken()
+	if "vm" == *queryType {
+		getAllVm()
+	}
+
 }
 
 func getAuthToken() {
@@ -37,6 +43,7 @@ func getAuthToken() {
 		fmt.Printf("the environment variable [%s] is not set\n",vcdPasswordEnvVarName)
 		os.Exit(-1)
 	}
+	fmt.Printf("%s: [%s]\n", vcdPasswordEnvVarName, "***************")
 
 	org := os.Getenv(vcdOrgEnvVarName)
 	if len(org) == 0 {
@@ -76,7 +83,30 @@ func getAllVm() {
 
 	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("response Body:", string(body))
+	queryRes := new(types.QueryResultRecordsType)
+	decodeBody(resp, queryRes)
 
+	for _, vm := range queryRes.VMRecord {
+		fmt.Printf("VM Name [%s]\n", vm.Name)
+	}
+
+
+}
+
+// decodeBody is used to XML decode a response body
+func decodeBody(resp *http.Response, out interface{}) error {
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	//fmt.Println("response Body:", string(body))
+
+	// Unmarshal the XML.
+	if err = xml.Unmarshal(body, &out); err != nil {
+		return err
+	}
+
+	return nil
 }
