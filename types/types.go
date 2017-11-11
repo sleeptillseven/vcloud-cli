@@ -1739,3 +1739,18 @@ type QueryResultOrgVdcStorageProfileRecordType struct {
 	StorageUsedMB           int    `xml:"storageUsedMB,attr,omitempty"`
 	StorageLimitMB          int    `xml:"storageLimitMB,attr,omitempty"`
 }
+
+type AllocatedIpAddressesType struct {
+	HREF     string  `xml:"href,attr,omitempty"`     // The URI of the entity.
+	Type     string  `xml:"type,attr,omitempty"`     // The MIME type of the entity.
+
+	IpAddress 				[]*IpAddressAllocation 	`xml:"IpAddress"`
+}
+
+type IpAddressAllocation struct {
+	AllocationType 				string `xml:"allocationType,attr,allocationType"`
+	IsDeployed 					string `xml:"isDeployed,attr,allocationType"`
+	Link						[]*Link `xml:Link`
+	IpAddress 					string `xml:"IpAddress"`
+
+}
