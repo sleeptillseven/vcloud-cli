@@ -1,6 +1,8 @@
-build:
-  - main: ./cmd/vcloud-cli/main.go
-    binary: drum-roll
+# .goreleaser.yml
+# Build customization
+builds:
+  - main: cmd/vcloud-cli/main.go
+    binary: vcloud-cli
     goos:
       - windows
       - darwin
