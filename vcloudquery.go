@@ -22,18 +22,18 @@ type VcdClientType struct {
 }
 
 func main() {
-	queryType := flag.String("query", "", "query type.")
-	networkname := flag.String("networkname", "", "networkname")
-	flag.Parse()
-	fmt.Printf("query type: [%s]\n", *queryType)
-	getAuthToken()
-	if "vm" == *queryType {
-		getAllVm()
-	}
-	if "allocatedip" == *queryType {
-		getAllocatedIpForNetworkName(*networkname)
-	}
+	createCommand := flag.NewFlagSet("query", flag.ExitOnError)
+	queryType := createCommand.String("type", "", "query type.")
+	networkname := createCommand.String("networkname", "", "networkname")
 
+	switch os.Args[1] {
+	case "query":
+		createCommand.Parse(os.Args[2:])
+		query(*queryType, *networkname)
+	default:
+		fmt.Printf("%q is not valid command.\n", os.Args[1])
+		os.Exit(2)
+	}
 }
 
 func getAuthToken() {
@@ -74,6 +74,17 @@ func getAuthToken() {
 		VAToken: auth,
 	}
 	fmt.Printf("authorization: [%s]\n", auth)
+}
+
+func query(queryType string, networkname string) {
+	fmt.Printf("query type: [%s]\n", queryType)
+	getAuthToken()
+	if "vm" == queryType {
+		getAllVm()
+	}
+	if "allocatedip" == queryType {
+		getAllocatedIpForNetworkName(networkname)
+	}
 }
 
 func getAllVm() {
