@@ -1,2 +1,3 @@
 package: github.com/floriankammermann/vcloud-cli
 import:
+  - package: github.com/urfave/cli
