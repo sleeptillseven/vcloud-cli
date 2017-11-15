@@ -3,13 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/mitchellh/go-homedir"
 )
-
-var cfgFile string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -28,44 +24,14 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobratest.yaml)")
+	RootCmd.PersistentFlags().String("user", "", "Port to run Application server on")
+	RootCmd.PersistentFlags().String( "password", "", "password of vcloud director api")
+	RootCmd.PersistentFlags().String("org", "", "org of vcloud director api")
+	viper.BindPFlag("user", RootCmd.PersistentFlags().Lookup("user"))
+	viper.BindPFlag("password", RootCmd.PersistentFlags().Lookup("password"))
+	viper.BindPFlag("org", RootCmd.PersistentFlags().Lookup("org"))
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	viper.SetEnvPrefix("vcd") // will be uppercased automatically
+	viper.AutomaticEnv()
 }
-
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		// Search config in home directory with name ".cobratest" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".cobratest")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-	//flags := RootCmd.Flags()
-	//flags.StringVarP(&username, "username", "u", "", "username, facultative if you have config file")
-	//viper.BindPFlag("username", flags.Lookup("username"))
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
-}
-
