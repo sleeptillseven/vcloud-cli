@@ -29,15 +29,12 @@ var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "execute queries",
 	Long: `execute queries`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("query called")
-	},
 }
 
 var allocatedipsCmd = &cobra.Command{
 	Use:   "allocatedips",
 	Short: "allocatedips for an org network",
-	Long: `execute queries`,
+	Long: `get all allocated ips of an org network`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(networkname) > 0 {
@@ -54,16 +51,6 @@ var allocatedipsCmd = &cobra.Command{
 
 func init() {
 	queryCmd.AddCommand(allocatedipsCmd)
-	allocatedipsCmd.Flags().StringVarP(&networkname, "network", "s", "", "network name to search allocated ips on")
+	allocatedipsCmd.Flags().StringVarP(&networkname, "network", "n", "", "network name to search allocated ips on")
 	RootCmd.AddCommand(queryCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// queryCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// queryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
