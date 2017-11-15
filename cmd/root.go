@@ -34,4 +34,24 @@ func init() {
 
 	viper.SetEnvPrefix("vcd") // will be uppercased automatically
 	viper.AutomaticEnv()
+
+	user := viper.GetString("user")
+	if len(user) == 0 {
+		fmt.Println("user has to be set, either as env var VCD_USER or as flag user")
+		os.Exit(1)
+	}
+	password := viper.GetString("password")
+	if len(password) == 0 {
+		fmt.Println("password has to be set, either as env var VCD_PASSWORD or as flag password")
+		os.Exit(1)
+	}
+	org := viper.GetString("org")
+	if len(org) == 0 {
+		fmt.Println("user has to be set, either as env var VCD_ORG or as flag org")
+		os.Exit(1)
+	}
+
+	fmt.Printf("VCD_USER: [%s]\n", user)
+	fmt.Printf("VCD_PASSWORD: [%s]\n", "***************")
+	fmt.Printf("VCD_ORG: [%s]\n", org)
 }
