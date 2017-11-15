@@ -21,10 +21,6 @@ type VcdClientType struct {
 
 func GetAuthToken(user string, password string, org string) {
 
-	fmt.Printf("%s: [%s]\n", vcdUserEnvVarName, user)
-	fmt.Printf("%s: [%s]\n", vcdPasswordEnvVarName, "***************")
-	fmt.Printf("%s: [%s]\n", vcdOrgEnvVarName, org)
-
 	req, err := http.NewRequest("POST", "https://datacenter.swisscomcloud.com/api/sessions", nil)
 	req.Header.Set("Accept", "application/*+xml;version=5.5")
 	req.SetBasicAuth(user+"@"+org, password)
