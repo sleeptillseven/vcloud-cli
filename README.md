@@ -1,5 +1,10 @@
 # a cli for the vcloud api
 
+## api spec
+
+https://pubs.vmware.com/vcd-55/topic/com.vmware.ICbase/PDF/vcd_55_api_guide.pdf  
+https://pubs.vmware.com/vca/index.jsp#com.vmware.vcloud.api.doc_56/GUID-F4BF9D5D-EF66-4D36-A6EB-2086703F6E37.html
+
 ## usage
 
 set the following env vars
